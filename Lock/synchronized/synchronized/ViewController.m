@@ -48,6 +48,14 @@
 {
     NSLog(@"开始卖票");
     while (YES) {
+        //模拟耗时操作
+        if([NSThread.currentThread.name isEqualToString:@"窗口B"]){
+            if(self.ticketPool.count < 10 && self.ticketPool.count > 7){
+                NSLog(@"-窗口B-线程-耗时操作");
+                [NSThread sleepForTimeInterval:1.0];
+            }
+        }
+        
        NSString *ticket = [self getTicketWithPool];
         if(ticket){
             NSLog(@"%@-%@",NSThread.currentThread.name,ticket);
@@ -64,12 +72,12 @@
     @synchronized (self.ticketPool) {
         if(self.ticketPool.count > 0){
             //模拟耗时操作
-            if([NSThread.currentThread.name isEqualToString:@"窗口A"]){
-                if(self.ticketPool.count < 10 && self.ticketPool.count > 7){
-                    NSLog(@"---耗时操作");
-                    [NSThread sleepForTimeInterval:1.0];
-                }
-            }
+//            if([NSThread.currentThread.name isEqualToString:@"窗口A"]){
+//                if(self.ticketPool.count < 10 && self.ticketPool.count > 7){
+//                    NSLog(@"-窗口A-锁-耗时操作");
+//                    [NSThread sleepForTimeInterval:1.0];
+//                }
+//            }
             NSString *ticket = self.ticketPool[self.ticketPool.count - 1];
             [self.ticketPool removeObject:ticket];
             return ticket;
